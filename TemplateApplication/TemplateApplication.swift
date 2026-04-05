@@ -1,14 +1,14 @@
 //
-// This source file is part of the Stanford Spezi Template Application open-source project
+// This source file is part of the OncoWell application.
 //
-// SPDX-FileCopyrightText: 2023 Stanford University
+// SPDX-FileCopyrightText: 2026 Stanford University
 //
 // SPDX-License-Identifier: MIT
 //
 
 import Spezi
-import SpeziFirebaseAccount
 import SpeziViews
+import SwiftData
 import SwiftUI
 
 
@@ -16,8 +16,8 @@ import SwiftUI
 struct TemplateApplication: App {
     @UIApplicationDelegateAdaptor(TemplateApplicationDelegate.self) var appDelegate
     @AppStorage(StorageKeys.onboardingFlowComplete) var completedOnboardingFlow = false
-    
-    
+
+
     var body: some Scene {
         WindowGroup {
             ZStack {
@@ -33,5 +33,18 @@ struct TemplateApplication: App {
             .testingSetup()
             .spezi(appDelegate)
         }
+        .modelContainer(
+            for: [
+                PatientProfile.self,
+                SymptomLogEntry.self,
+                TestResult.self,
+                DoctorVisitNote.self,
+                Appointment.self,
+                QuestionItem.self,
+                AppointmentRecording.self,
+                TranscriptSegment.self,
+                TranscriptSummary.self
+            ]
+        )
     }
 }

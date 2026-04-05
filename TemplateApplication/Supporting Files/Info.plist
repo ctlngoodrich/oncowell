@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Spezi</string>
+	<string>OncoWell</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -29,19 +29,19 @@
 	<key>NSCameraUsageDescription</key>
 	<string>This message should never appear. Please adjust this when you start using camera information. We have to put this in here as ResearchKit has the possibility to use it and not putting it here returns an error on AppStore Connect.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>The Spezi Template Application uses the step count to demonstrate Spezi's integration with HealthKit.</string>
+	<string>OncoWell reads your health data (heart rate, blood pressure, weight, activity, and sleep) to help you understand your health alongside your treatment options.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>The Spezi Template Application uses the step count to demonstrate Spezi's integration with HealthKit.</string>
+	<string>OncoWell does not write health data. This permission is included for future use.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This message should never appear. Please adjust this when you start using location information. We have to put this in here as ResearchKit has the possibility to use it and not putting it here returns an error on AppStore Connect.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This message should never appear. Please adjust this when you start using location information. We have to put this in here as ResearchKit has the possibility to use it and not putting it here returns an error on AppStore Connect.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This message should never appear. Please adjust this when you start using microphone information. We have to put this in here as ResearchKit has the possibility to use it and not putting it here returns an error on AppStore Connect.</string>
+	<string>OncoWell uses the microphone to record doctor appointments so you can review what was discussed.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>This message should never appear. Please adjust this when you start using motion information. We have to put this in here as ResearchKit has the possibility to use it and not putting it here returns an error on AppStore Connect.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>This message should never appear. Please adjust this when you start using speech recognition. We have to put this in here as ResearchKit has the possibility to use it and not putting it here returns an error on AppStore Connect.</string>
+	<string>OncoWell uses speech recognition to transcribe recorded doctor appointments so you can review them later in text.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -1,71 +1,46 @@
 //
-// This source file is part of the Stanford Spezi Template Application open-source project
+// This source file is part of the OncoWell application.
 //
-// SPDX-FileCopyrightText: 2023 Stanford University
+// SPDX-FileCopyrightText: 2026 Stanford University
 //
 // SPDX-License-Identifier: MIT
 //
 
-@_spi(TestingSupport) import SpeziAccount
-import SpeziFirebaseAccount
 import SpeziHealthKit
-import SpeziNotifications
 import SpeziOnboarding
 import SpeziViews
 import SwiftUI
 
 
-/// Displays an multi-step onboarding flow for the Spezi Template Application.
 struct OnboardingFlow: View {
     @Environment(HealthKit.self) private var healthKit
-    
-    @Environment(\.scenePhase) private var scenePhase
-    @Environment(\.notificationSettings) private var notificationSettings
-    
+
     @AppStorage(StorageKeys.onboardingFlowComplete) private var completedOnboardingFlow = false
-    
-    @State private var localNotificationAuthorization = false
-    
-    
-    @MainActor private var healthKitAuthorization: Bool {
-        // As HealthKit not available in preview simulator
+
+
+    @MainActor private var healthKitAvailable: Bool {
+        if ProcessInfo.processInfo.isPreviewSimulator {
+            return true
+        }
+        return HKHealthStore.isHealthDataAvailable()
+    }
+
+    @MainActor private var healthKitAuthorized: Bool {
         if ProcessInfo.processInfo.isPreviewSimulator {
             return false
         }
         return healthKit.isFullyAuthorized
     }
-    
+
     var body: some View {
         ManagedNavigationStack(didComplete: $completedOnboardingFlow) {
             Welcome()
-            InterestingModules()
-            
-            if !FeatureFlags.disableFirebase {
-                AccountOnboarding()
-            }
-            
-#if !(targetEnvironment(simulator) && (arch(i386) || arch(x86_64)))
-            Consent()
-#endif
-            
-            if HKHealthStore.isHealthDataAvailable() && !healthKitAuthorization {
+            if healthKitAvailable && !healthKitAuthorized {
                 HealthKitPermissions()
             }
-            
-            if !localNotificationAuthorization {
-                NotificationPermissions()
-            }
+            DiagnosisContext()
         }
         .interactiveDismissDisabled(!completedOnboardingFlow)
-        .onChange(of: scenePhase, initial: true) {
-            guard case .active = scenePhase else {
-                return
-            }
-            
-            Task {
-                localNotificationAuthorization = await notificationSettings().authorizationStatus == .authorized
-            }
-        }
     }
 }
 
@@ -74,7 +49,6 @@ struct OnboardingFlow: View {
     OnboardingFlow()
         .previewWith(standard: TemplateApplicationStandard()) {
             HealthKit()
-            AccountConfiguration(service: InMemoryAccountService())
-            TemplateApplicationScheduler()
         }
+        .modelContainer(for: PatientProfile.self, inMemory: true)
 }

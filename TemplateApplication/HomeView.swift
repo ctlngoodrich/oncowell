@@ -1,59 +1,69 @@
 //
-// This source file is part of the Stanford Spezi Template Application open-source project
+// This source file is part of the OncoWell application.
 //
-// SPDX-FileCopyrightText: 2023 Stanford University
+// SPDX-FileCopyrightText: 2026 Stanford University
 //
 // SPDX-License-Identifier: MIT
 //
 
-@_spi(TestingSupport) import SpeziAccount
 import SwiftUI
 
 
 struct HomeView: View {
     enum Tabs: String {
-        case schedule
-        case contact
+        case home
+        case learn
+        case track
+        case appointments
     }
-    
-    
-    @AppStorage(StorageKeys.homeTabSelection) private var selectedTab = Tabs.schedule
-    @AppStorage(StorageKeys.tabViewCustomization) private var tabViewCustomization = TabViewCustomization()
-    
-    @State private var presentingAccount = false
-    
-    
+
+
+    @AppStorage(StorageKeys.homeTabSelection) private var selectedTab = Tabs.home
+    @State private var showingSettings = false
+
+
     var body: some View {
         TabView(selection: $selectedTab) {
-            Tab("Schedule", systemImage: "list.clipboard", value: .schedule) {
-                ScheduleView(presentingAccount: $presentingAccount)
+            Tab("Home", systemImage: "house.fill", value: .home) {
+                wrappedTab { HomeTab() }
             }
-            .customizationID("home.schedule")
-            Tab("Contacts", systemImage: "person.fill", value: .contact) {
-                Contacts(presentingAccount: $presentingAccount)
+            Tab("Learn", systemImage: "book.fill", value: .learn) {
+                wrappedTab { LearnTab() }
             }
-            .customizationID("home.contacts")
+            Tab("Track", systemImage: "chart.line.uptrend.xyaxis", value: .track) {
+                wrappedTab { TrackTab() }
+            }
+            Tab("Appointments", systemImage: "calendar", value: .appointments) {
+                wrappedTab { AppointmentsTab() }
+            }
         }
-        .tabViewStyle(.sidebarAdaptable)
-        .tabViewCustomization($tabViewCustomization)
-        .sheet(isPresented: $presentingAccount) {
-            AccountSheet(dismissAfterSignIn: false) // presentation was user initiated, do not automatically dismiss
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
         }
-        .accountRequired(!FeatureFlags.disableFirebase && !FeatureFlags.skipOnboarding) {
-            AccountSheet()
+    }
+
+    private func wrappedTab<Content: View>(
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        NavigationStack {
+            content()
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            showingSettings = true
+                        } label: {
+                            Image(systemName: "gearshape")
+                                .accessibilityLabel("Settings")
+                        }
+                    }
+                }
         }
     }
 }
 
 
 #Preview {
-    var details = AccountDetails()
-    details.userId = "lelandstanford@stanford.edu"
-    details.name = PersonNameComponents(givenName: "Leland", familyName: "Stanford")
-    
-    return HomeView()
+    HomeView()
         .previewWith(standard: TemplateApplicationStandard()) {
-            TemplateApplicationScheduler()
-            AccountConfiguration(service: InMemoryAccountService(), activeDetails: details)
         }
 }
