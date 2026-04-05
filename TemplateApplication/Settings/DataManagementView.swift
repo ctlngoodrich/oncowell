@@ -176,8 +176,15 @@ enum DeleteTarget: Identifiable {
         }
     }
 
-    // swiftlint:disable:next empty_count
-    var isEmpty: Bool { count == 0 }
+    var isEmpty: Bool {
+        switch self {
+        case .symptoms(0), .testResults(0), .visitNotes(0),
+             .appointments(0), .recordings(0):
+            true
+        default:
+            false
+        }
+    }
 
     var itemName: String {
         count == 1 ? label.lowercased().dropLast().description : label.lowercased()
