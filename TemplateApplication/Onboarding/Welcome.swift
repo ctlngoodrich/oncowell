@@ -16,16 +16,28 @@ struct Welcome: View {
 
 
     var body: some View {
-        OnboardingView(
-            title: "OncoWell",
-            subtitle: "Understand your treatment options, track your health, and prepare for your next appointment.",
-            areas: onboardingAreas,
-            actionText: "Get Started",
-            action: {
-                managedNavigationPath.nextStep()
-            }
-        )
-        .padding(.top, 24)
+        VStack(spacing: 0) {
+            Image("OncoWellLogo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 140, height: 140)
+                .accessibilityHidden(true)
+                .padding(.top, 32)
+            OnboardingView(
+                title: "OncoWell",
+                subtitle: welcomeSubtitle,
+                areas: onboardingAreas,
+                actionText: "Get Started",
+                action: {
+                    managedNavigationPath.nextStep()
+                }
+            )
+        }
+    }
+
+    private var welcomeSubtitle: String {
+        "Understand your treatment options, track your health, "
+        + "and prepare for your next appointment."
     }
 
     private var onboardingAreas: [OnboardingInformationView.Area] {
